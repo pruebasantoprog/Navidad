@@ -1,108 +1,320 @@
-  /* reset css */
-        html, body, h1, h2, h3, h4, h5, h6, p, ol, ul, li, pre, code, address, variable, form, fieldset, blockquote {
-            padding: 0; /*relleno a 0*/
-            margin: 0;  /*margen a 0 */
-            font-size: 100%;
-            font-weight: normal;
-        }
-        /* fin reset css*/
+      /* reset css */
+      html, body, h1, h2, h3, h4, h5, h6, p, ol, ul, li, pre, code, address, variable, form, fieldset, blockquote {
+        padding: 0; /*relleno a 0*/
+        margin: 0;  /*margen a 0 */
+        font-size: 100%;
+        font-weight: normal;
+    }
+    /* fin reset css*/
+    
+    :root{
+        /*Variables para estilo*/
+        --primary:#42b983;
+        --secondary:#2e4469;
+        --backgroung:#35495e;
+        --black-text:rgb(61,61,59);
+        --white-text:#ffffff;
+        --blue-radient:linear-gradient(90deg,#42b983,#35495e);
+        --buttom-hover:#5b79a2;
+        --text-shadow:.2rem .2rem .2rem #0d0d0e;
+    }
 
-        html{
-            background-color: rgb(183, 89, 89);
-        }
-        .estilopagina{
-            font-family: 'Trebuchet MS',Arial, Helvetica, sans-serif;
-            color: black;
-            background-color: bisque;
-            /*background-color: #dbd8d8;*/
-            border: 3px solid #009;
-            width: 960px;
-            margin: 0 auto;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
 
-        .inicio{
-            margin: 0 auto;
-            /*margin-left: 100px;*/
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        #banner{
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        /*h1{
-            text-align: center;
-        }*/
-
-        #cargarDatos{
-           margin: 0 auto;
-        }
-
-        /*#imagen{
-            margin: 0 auto;
-            padding: 0 10px;
-        }*/
-
-        table{
-            margin: 0 auto;
-            width: 760px;
-            margin-bottom: 10px;
-        }
-
-        table,
-        th,
-        td{
-            border: 1px solid black;
-            /*border-collapse: collapse;*/
-            text-align: center;
-            color: rgb(30, 30, 195);
+    /*Barra de Navegación*/
+    nav{
+        background-color: var(--primary);
+        height: 10vh;
+        width: 100%;
+        display: flex;
+        /*space-around distribuye uniformemente los elementos a lo largo del eje principal y deja espacio equitativo en cada extremo del contenedor.*/
+        justify-content: space-around;
+        /*Alineamos los items al centro vericalmente hablando*/
+        align-items: center;
+    }
+    
+    header h1{
+        /*Para logotipo*/
+        color: var(--white-text);
+        font-size: 2rem;
+        letter-spacing: .7rem;
+    }
+    
+    nav ul{
+        /*Con display flex se posicionan los elementos uno al lado del otro, sino es flexbox uno encima de otro*/
+        display: flex;
+    }
+    nav li{
+        /*Ponemos un borde derecho para que tengamos una línea vertical al lado de cada enlace le ponemos 0.41 de transparencia*/
+        border-right: 1px solid rgb(92,89,89,0.41);
+        /*Quitamos los puntos de la lista*/
+        list-style: none;       
             
-        }
+    }
+    nav ul li:last-child{
+        /*Al último hijo le quitamos el borde de la derecha*/
+        border-right: none;
+    }
+    
+    nav ul li a{
+        color: var(--white-text);
+        font-size: 1.2rem;
+        padding: .8rem 1rem;
+        text-decoration: none; 
+    }
 
-        /*Ponemos en rojo las filas pares de la tabla*/
-        #datos tr:nth-child(even){
-            background-color: rgb(189, 125, 125);
-        }
+    nav ul li a:hover{
+        /*Cambiamos el color del hipervínculo cuando el ratón esté por encima*/
+        background-color: var(--buttom-hover);
+        transition: .3s;
+        border-bottom: solid .2rem var(--secondary);
+    }
 
-        #datosConsulFecha tr:nth-child(even){
-            background-color: rgb(189, 125, 125);
+    .drawer{
+        font-size: 1rem;
+        color: var(--white-text);
+        float: left;
+        /*Ponemos cursor en forma de mano*/
+        cursor: pointer;
+        /*Hacemeos desaparecer el icono de líneas solo debe aparecer cuando la resolución es pequeña y el menú está a la izquierda*/
+        display:none;
+        margin-left: 1rem;
+        border: solid 1.5px var(--white-text);
+        padding: .2rem;
+        border-radius: .1rem;
+    }
+    
+    #ckbox{
+        /*Hacemos desaparecer el check*/
+        display: none;
+    }
+    @media(max-width:1039px){
+        nav{
+            justify-content: flex-start;
         }
-
-        #numlot:focus{
-            background-color: #FDD041;
+        .drawer{
+            display:block
         }
-
-        /*Ponemos en verde las filas pares de la tabla*/
-        #media tr:nth-child(even){
-            background-color: rgb(125, 189, 159);
+        nav h1{
+            border-left: 1rem;
         }
-
-        #gordos tr:nth-child(even){
-            background-color: rgb(140, 167, 235);
+        ul{
+            position: fixed;
+            width: 50%;
+            height: 100vh;
+            background-color: var(--backgroung);
+            top: 10vh;
+            /*Ponemos -100% para que solo aparezca cuando hacemos clic en el menú*/
+            left: -100%;
+            text-align: left;
+            transition: all .5s;
+            display: flex;
+            flex-direction: column;
+            /*Estiramos los elementos para rellenar*/
+            align-content: stretch;
         }
-
-        #banner img{
-            border-radius:10px;
-            border:5px outset blue;
-            box-shadow: 5px 5px 15px 5px black;
-            padding: 1px;
+        nav ul li{
+            padding: 1rem 0;
+            display: flex;
+            /*Separamos un poco los li*/
+            flex-direction: column;
+            /*Separamos de la iquierda para que no aparezca tan pedago*/
+            padding-left: 2rem;
+            /*Ponemos un borde abajo para hacer la separación y le ponemos un gradiente con transparencia rgba para suavizarlo*/
+            border-bottom: solid .1rem rgba(201,196,196,0.4);
         }
-
-        #gifanimados img{
-            border:5px outset green;
+        /*Si esta chequeado mostramos el menu con 0 sino es -100*/
+        #ckbox:checked ~ .menu-box{
+            left:0;
         }
+    }
+    /*Fin Barra de Navegación*/
 
-        #banner img:hover{
-            -ms-transform: scale(1.2);
-            transform: scale(1.2);
-            transition:-webkit-transform 0.9s ease-in-out 0.5s;
-        }
 
-        #filasEncontradas tr{
-            background-color: #FF9;
-        }
+    html{
+        background-color: rgb(183, 89, 89);
+    }
+    .estilopagina{
+        font-family: 'Trebuchet MS',Arial, Helvetica, sans-serif;
+        color: black;
+        background-color: bisque;
+        /*background-color: #dbd8d8;*/
+        border: 3px solid #009;
+        width: 960px;
+        margin: 0 auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
 
+    .inicio{
+        margin: 0 auto;
+        /*margin-left: 100px;*/
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    #banner{
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    /*h1{
+        text-align: center;
+    }*/
+
+    #cargarDatos{
+       margin: 0 auto;
+    }
+
+    /*#imagen{
+        margin: 0 auto;
+        padding: 0 10px;
+    }*/
+
+    table{
+        margin: 0 auto;
+        width: 760px;
+        margin-bottom: 10px;
+    }
+
+    table,
+    th,
+    td{
+        border: 1px solid black;
+        /*border-collapse: collapse;*/
+        text-align: center;
+        color: rgb(30, 30, 195);
+        
+    }
+
+    /*Ponemos en rojo las filas pares de la tabla*/
+    #datos tr:nth-child(even){
+        background-color: rgb(189, 125, 125);
+    }
+
+    #datosConsulFecha tr:nth-child(even){
+        background-color: rgb(189, 125, 125);
+    }
+
+    #numlot:focus{
+        background-color: #FDD041;
+    }
+
+    /*Ponemos en verde las filas pares de la tabla*/
+    #media tr:nth-child(even){
+        background-color: rgb(125, 189, 159);
+    }
+
+    #gordos tr:nth-child(even){
+        background-color: rgb(140, 167, 235);
+    }
+
+    #banner img{
+        border-radius:10px;
+        border:5px outset blue;
+        box-shadow: 5px 5px 15px 5px black;
+        padding: 1px;
+    }
+
+    #gifanimados img{
+        border:5px outset green;
+    }
+
+    #banner img:hover{
+        -ms-transform: scale(1.2);
+        transform: scale(1.2);
+        transition:-webkit-transform 0.9s ease-in-out 0.5s;
+    }
+
+    #filasEncontradas tr{
+        background-color: #FF9;
+    }
+
+    .barra{
+        background-color:rgb(152,196,236);
+        color: black;
+        border: solid 2px;
+        border-radius: 4px;            
+    }
+
+    #termigordo td {
+        vertical-align: bottom;            
+        height: 100%; /* Asegura que el div tome el 100% de la altura de la celda */
+    }
+    #termigordo td div{
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    #termigordo tr :nth-child(even){
+        background-color: rgb(198, 217, 180);
+    }
+
+    #decenagordo{
+        float: left;
+        width: 200px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    #centenagordo{    
+        float: left;       
+        width: 200px;
+        /*margin-right: 20px;*/
+    }
+
+    #millargordo{
+        float: left;
+        width: 200px;            
+    }
+    
+    #decmillargordo{           
+        width: 200px;            
+    }
+
+    #decenagordo tr:nth-child(even),#centenagordo tr:nth-child(even),#millargordo tr:nth-child(even),#decmillargordo tr:nth-child(even){
+        background-color: rgb(198, 217, 180);
+    }
+
+    #decenagordo td {
+        vertical-align: middle;            
+        height: 100%; /* Asegura que el div tome el 100% de la altura de la celda */
+    }
+
+    .container{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        height: 30vh;    
+    }
+
+    .tarjetas{
+        border-radius: .3rem;
+        padding: .5rem;
+        text-align: center;
+        flex-direction: row;
+        max-width: 30%;
+        margin: 1rem;
+    }
+
+    .tarjetaNavidad{
+        background-color: rgb(158,223,233);
+        border: solid 2px cadetblue;
+        color: rgb(62,106,107);
+    }
+
+    .tarjetaNinio{
+        background-color: rgb(124,230,165);
+        border: solid 2px rgb(31,83,44);
+        color: rgb(31,83,44);
+    }
+
+    .tarjetas i{
+        /*Aumentamos tamaño icono de tarjeta*/
+        font-size: 3rem;
+    }
+
+    button{
+        min-width: 4rem;
+    }

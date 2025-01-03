@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotería de El Niño</title>
+
+    <link href="Estilos.css"  rel="stylesheet">
+
+    <!--Para evitar error :5500/favicon.ico:1 poner <link rel="shortcut icon" href="">  -->
+    <link rel="shortcut icon" href="">
+
+    <!-- Usando los iconos de font oson 4-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   
+</head>
+<body class="estilopagina">
+    <header>
+        <nav>
+            <!--Sin javascript simulamos el efecto con un checkbox-->
+            <input type="checkbox" id="ckbox">
+            <label for="ckbox" class="drawer">
+                <i class="fa fa-bars" aria-hidden="true">Menú</i>
+            </label>
+            <h1>Opciones Lotería</h1>
+            <!--Lista desordenada que va a contener los botones-->
+            <ul class="menu-box">
+                <li><a href="index.html" class="fa fa-home" aria-hidden="true"> Inicio</a></li>
+                <li><a href="NavidadJsonLocal.html" class="fa fa-snowflake-o" aria-hidden="true"> Lotería Navidad</a></li>
+                <li><a href="#" class="fa fa-grav" aria-hidden="true"> Lotería de El Niño</a></li>                
+            </ul>
+        </nav>
+    </header>
+    <div id="banner">
+        <img src="fotonavidad.jpg" width="760" height="198" alt="Navidad" id="imagen">
+    </div>
+    <br/>
+    <div id="gifanimados">
+        <marquee direction="right">
+        <img src="santa.gif" width="128" height="72" alt="santa" id="santa">
+        </marquee>
+    </div>
+    <div class="inicio">
+        <h1><u>Sorteo de El Niño</u></h1>
+        <br/>
+        
+        <button id="cargarDatos">Comprobar Número</button>
+        <label for="start">Introduce Número:</label>   
+        <input type="number" name="numlot" id="numlot" min="0" max="99999" step="1" maxlength="5"/>
+        <br/><br/>
+        <div><a href='https://es.wikipedia.org/wiki/Sorteo_Extraordinario_del_Ni%C3%B1o' target='_blank'> Historía de El Nino</a></div>
+        <br/><br/>
+    </div>
+    <div><table id="filasEncontradas" caption="Atención"></table></div>
+    <div id="resultado">
+        <table id="termigordo"></table>
+        <table id="decenagordo"></table>
+        <table id="centenagordo"></table>
+        <table id="millargordo"></table>
+        <table id="decmillargordo"></table>
+        
+        <table id="gordos"></table>
+        <table id="media"></table>        
+    </div>
+    <div>
+        <table id="datos"></table>
+    </div>
+</body>
+
+<script>
+        
+        window.addEventListener("load",iniciar,false);
+
+function iniciar(){
+    
+    let dataValues=[];
+    let decenaMillar0=0,decenaMillar1=0,decenaMillar2=0,decenaMillar3=0,decenaMillar4=0,decenaMillar5=0,decenaMillar6=0,
+        decenaMillar7=0,decenaMillar8=0,decenaMillar9=0;
+    let millar0=0,millar1=0,millar2=0,millar3=0,millar4=0,millar5=0,millar6=0,millar7=0,millar8=0,millar9=0;
+    let centena0=0,centena1=0,centena2=0,centena3=0,centena4=0,centena5=0,centena6=0,centena7=0,centena8=0,centena9=0;
+    let decena0=0,decena1=0,decena2=0,decena3=0,decena4=0,decena5=0,decena6=0,decena7=0,decena8=0,decena9=0;
+    let terminacion0=0,terminacion1=0,terminacion2=0,terminacion3=0,terminacion4=0,terminacion5=0,terminacion6=0,terminacion7=0,
+        terminacion8=0,terminacion9=0;
+    let mediaDecMillar,mediaMillar,mediaCentena,mediaDecena,mediaTerminacion=0
+    let arrayDecMillar,arrayMillar,arrayCentena,arrayDecena,arrayTerminacion=[];
+    let arrayTotalesDecMillar,arrayTotalesMillar,arrayTotalesCentena,arrayTotalesDecena,arrayTotalesTerm=[];
+    
+    let primeros=[];
+    let segundos=[];
+    let terceros=[];
+    //https://es.wikipedia.org/wiki/Sorteo_Extraordinario_del_Ni%C3%B1o
+   
+    fetch("ninio.json")
+    .then(res=>res.json())
+    .then(salida=>{
+
+        datosjson=salida;
+
+        dataValues=datosjson[2].data;
+
+        let tabla="<thead><tr><th>Año</th><th>Primer Premio</th><th>Segundo Premio</th><th>Tercer Premio</th></tr></thead>";
+
+        arrayDecMillar=[decenaMillar0,decenaMillar1,decenaMillar2,decenaMillar3,decenaMillar4,decenaMillar5,decenaMillar6,
+                        decenaMillar7,decenaMillar8,decenaMillar9];
+        arrayMillar=[millar0,millar1,millar2,millar3,millar4,millar5,millar6,millar7,millar8,millar9];
+        arrayCentena=[centena0,centena1,centena2,centena3,centena4,centena5,centena6,centena7,centena8,centena9];
+        arrayDecena=[decena0,decena1,decena2,decena3,decena4,decena5,decena6,decena7,decena8,decena9];
+        arrayTerminacion=[terminacion0,terminacion1,terminacion2,terminacion3,terminacion4,terminacion5,terminacion6,terminacion7,terminacion8,terminacion9];
+         //Trazas de todos los numeros con función flecha
+         dataValues.forEach(item => {
+                tabla+="<tr><td>";
+                tabla+=item.ANIO;
+                tabla+="</td><td>";
+                tabla+=item.PRIMERO;
+                tabla+="</td><td>";
+                tabla+=item.SEGUNDO;
+                tabla+="</td><td>";
+                tabla+=item.TERCERO;
+                tabla+="</td></tr>";
+                
+                //console.log("item.PRIMERO",item.PRIMERO);
+                //Guardamos los gordos para media de gordos
+                if(item.PRIMERO!=""){
+                    primeros.push(item.PRIMERO.toString().padStart(5,0));
+                }
+                if(item.SEGUNDO!="" && item.SEGUNDO!=0){
+                    segundos.push(item.SEGUNDO.toString().padStart(5,0));
+                }
+                if(item.TERCERO!="" && item.TERCERO!=0){
+                    terceros.push(item.TERCERO.toString().padStart(5,0));
+                }
+                
+                incrementarNumero(arrayDecMillar,item.PRIMERO.toString().padStart(5,0).charAt(0));
+                incrementarNumero(arrayMillar,item.PRIMERO.toString().padStart(5,0).charAt(1));
+                incrementarNumero(arrayCentena,item.PRIMERO.toString().padStart(5,0).charAt(2));
+                incrementarNumero(arrayDecena,item.PRIMERO.toString().padStart(5,0).charAt(3));
+                incrementarNumero(arrayTerminacion,item.PRIMERO.toString().padStart(5,0).charAt(4));                
+           });
+
+           for(let i=0;i<arrayDecMillar.length;i++){
+                console.log("En arrayDecMillar"+arrayDecMillar[i]);
+           }
+           for(let i=0;i<arrayMillar.length;i++){
+                console.log("En arrayMillar"+arrayMillar[i]);
+           }
+           for(let i=0;i<arrayCentena.length;i++){
+                console.log("En arrayCentena"+arrayCentena[i]);
+           }
+           for(let i=0;i<arrayDecena.length;i++){
+                console.log("En arrayDecena"+arrayDecena[i]);
+           }
+           for(let i=0;i<arrayTerminacion.length;i++){
+                console.log("En arrayTerminacion"+arrayTerminacion[i]);
+           }
+
+           mediaDecMillar=calcularMedia(arrayDecMillar);
+           mediaMillar=calcularMedia(arrayMillar);
+           mediaCentena=calcularMedia(arrayCentena);
+           mediaDecena=calcularMedia(arrayDecena);
+           mediaTerminacion=calcularMedia(arrayTerminacion);
+
+           console.log("mediaDecMilar",mediaDecMillar);
+           console.log("mediaMillar",mediaMillar);
+           console.log("mediaCentena",mediaCentena);
+           console.log("mediaDecena",mediaDecena);
+           console.log("mediaTerminacion",mediaTerminacion);
+
+           //Calcular Arrarys                                    
+           arrayTotalesDecMillar=calcularNumeros(arrayDecMillar,mediaDecMillar);
+
+           arrayTotalesMillar=calcularNumeros(arrayMillar,mediaMillar);
+
+           arrayTotalesCentena=calcularNumeros(arrayCentena,mediaCentena)
+
+           arrayTotalesDecena=calcularNumeros(arrayDecena,mediaDecena);
+
+           arrayTotalesTerm=calcularNumeros(arrayTerminacion,mediaTerminacion);
+
+           arrayTotalesDecMillar.forEach(num=>{
+                    console.log("DecenaMillar de num=",num); 
+           });
+           arrayTotalesMillar.forEach(num=>{
+                    console.log("Millar de num=",num); 
+           });
+           arrayTotalesCentena.forEach(num=>{
+                    console.log("Centena de num=",num); 
+           });
+           arrayTotalesDecena.forEach(num=>{
+                    console.log("Decena de num=",num); 
+           });
+           arrayTotalesTerm.forEach(num=>{
+                    console.log("Terminacion de num=",num); 
+           });
+
+           console.log(decenaMillar0," ",decenaMillar1," ",decenaMillar2," ",decenaMillar3," ",decenaMillar4," ",decenaMillar5," ",decenaMillar6," ",
+                       decenaMillar7," ",decenaMillar8," ",decenaMillar9);
+           console.log(millar0," ",millar1," ",millar2," ",millar3," ",millar4," ",millar5," ",millar6," ",millar7," ",millar8," ",millar9);
+           console.log(centena0," ",centena1," ",centena2," ",centena3," ",centena4," ",centena5," ",centena6," ",centena7," ",centena8," ",centena9);
+           console.log(decena0," ",decena1," ",decena2," ",decena3," ",decena4," ",decena5," ",decena6," ",decena7," ",decena8," ",decena9);
+           console.log(terminacion0," ",terminacion1," ",terminacion2," ",terminacion3," ",terminacion4," ",terminacion5," ",terminacion6," ",
+                       terminacion7," ",terminacion8," ",terminacion9);
+
+           let tablaMedia="<tr><th>Media Numeros Primer Premio</th></tr>";
+
+           arrayTotalesDecMillar.forEach(decMillar=>{
+                arrayTotalesMillar.forEach(millar=>{
+                    arrayTotalesCentena.forEach(centena=>{
+                        arrayTotalesDecena.forEach(decena=>{
+                            arrayTotalesTerm.forEach(terminacion=>{
+                                tablaMedia+="<tr><td>";
+                                tablaMedia+=`${decMillar}${millar}.${centena}${decena}${terminacion}`;
+                                tablaMedia+="</td></tr>";
+                            });
+                        });
+                    });
+                });
+           });
+
+           //Calculo de gordo
+           decenaMillar0=0,decenaMillar1=0,decenaMillar2=0,decenaMillar3=0,decenaMillar4=0,decenaMillar5=0,decenaMillar6=0,
+           decenaMillar7=0,decenaMillar8=0,decenaMillar9=0;
+           millar0=0,millar1=0,millar2=0,millar3=0,millar4=0,millar5=0,millar6=0,millar7=0,millar8=0,millar9=0;
+           centena0=0,centena1=0,centena2=0,centena3=0,centena4=0,centena5=0,centena6=0,centena7=0,centena8=0,centena9=0;
+           decena0=0,decena1=0,decena2=0,decena3=0,decena4=0,decena5=0,decena6=0,decena7=0,decena8=0,decena9=0;
+           terminacion0=0,terminacion1=0,terminacion2=0,terminacion3=0,terminacion4=0,terminacion5=0,terminacion6=0,terminacion7=0,
+           terminacion8=0,terminacion9=0;
+           
+           let numerosPru=[0,0,0,0,0,0,0,0,0,0];
+           let altura=0;
+           let anchura=0;
+
+           incrementarNumero(numerosPru,"7");
+
+           numerosPru.forEach(numero=>console.log("PRUNUM",numero));
+
+           console.log("Total gordos",primeros.length);
+
+                     /*console.log(decenaMillar0," ",decenaMillar1," ",decenaMillar2," ",decenaMillar3," ",decenaMillar4," ",decenaMillar5," ",decenaMillar6," ",
+                       decenaMillar7," ",decenaMillar8," ",decenaMillar9);
+           console.log(millar0," ",millar1," ",millar2," ",millar3," ",millar4," ",millar5," ",millar6," ",millar7," ",millar8," ",millar9);
+           console.log(centena0," ",centena1," ",centena2," ",centena3," ",centena4," ",centena5," ",centena6," ",centena7," ",centena8," ",centena9);
+           console.log(decena0," ",decena1," ",decena2," ",decena3," ",decena4," ",decena5," ",decena6," ",decena7," ",decena8," ",decena9);
+           console.log(terminacion0," ",terminacion1," ",terminacion2," ",terminacion3," ",terminacion4," ",terminacion5," ",terminacion6," ",
+                       terminacion7," ",terminacion8," ",terminacion9);*/
+           arrayTotalesDecMillar=calcularNumeroSinSalir([decenaMillar0,decenaMillar1,decenaMillar2,decenaMillar3,decenaMillar4,decenaMillar5,decenaMillar6,
+           decenaMillar7,decenaMillar8,decenaMillar9]);
+
+           
+
+           let tablaTerminaciones="<tr><th colspan="+arrayTerminacion.length+">Terminaciones PrimerPremio</th></tr>";
+           tablaTerminaciones+="<tr><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>";
+           tablaTerminaciones+="<tr>";
+           arrayTerminacion.forEach((terminacion,indice)=>{
+                                tablaTerminaciones+="<td>";
+                                altura=obtenerPorcentajeNumero(arrayTerminacion,indice)*6;
+                                tablaTerminaciones+="<div class='barra' style='height:"+altura+"px;'; >"
+                                                    +`${terminacion}`+"<br/>"+obtenerPorcentajeNumero(arrayTerminacion,indice).replace('.',',')+"%</div>";
+                                console.log("Terminacion en % ",obtenerPorcentajeNumero(arrayTerminacion,indice).replace('.',','));
+                                tablaTerminaciones+="</td>";
+                            });
+           tablaTerminaciones+="</tr>";
+
+           let tablaDecena="<tr><th colspan=2>Decena Primer <br/>Premio</th></tr>";
+           tablaDecena+="<tr><th>Numero</th><th>NºVeces/Porcentaje</th></tr>";
+           
+           arrayDecena.forEach((decena,indice)=>{
+                                tablaDecena+="<tr>";
+                                tablaDecena+="<td>"+indice+"</td>";
+                                tablaDecena+="<td>";                             
+                                anchura=obtenerPorcentajeNumero(arrayDecena,indice)*7;
+                                tablaDecena+="<div class='barra' style='width:"+anchura+"px;'; >"
+                                                    +`${decena}`+"<br/>"+obtenerPorcentajeNumero(arrayDecena,indice).replace('.',',')+"%</div>";
+                                console.log("decena en % ",obtenerPorcentajeNumero(arrayDecena,indice).replace('.',','));
+                                tablaDecena+="</td>";
+                                tablaDecena+="</tr>";
+                            });
+           
+
+           let tablaCentena="<tr><th colspan=2>Centena Primer <br/>Premio</th></tr>";
+           tablaCentena+="<tr><th>Numero</th><th>NºVeces/Porcentaje</th></tr>";
+           
+           arrayCentena.forEach((centena,indice)=>{
+                                tablaCentena+="<tr>";
+                                tablaCentena+="<td>"+indice+"</td>";
+                                tablaCentena+="<td>";                             
+                                anchura=obtenerPorcentajeNumero(arrayCentena,indice)*7;
+                                tablaCentena+="<div class='barra' style='width:"+anchura+"px;'; >"
+                                                    +`${centena}`+"<br/>"+obtenerPorcentajeNumero(arrayCentena,indice).replace('.',',')+"%</div>";
+                                console.log("centena en % ",obtenerPorcentajeNumero(arrayCentena,indice).replace('.',','));
+                                tablaCentena+="</td>";
+                                tablaCentena+="</tr>";
+                            });
+
+           let tablaMillar="<tr><th colspan=2>Millar Primer <br/>Premio</th></tr>";
+           tablaMillar+="<tr><th>Numero</th><th>NºVeces/Porcentaje</th></tr>";
+           
+           arrayMillar.forEach((millar,indice)=>{
+                                tablaMillar+="<tr>";
+                                tablaMillar+="<td>"+indice+"</td>";
+                                tablaMillar+="<td>";                             
+                                anchura=obtenerPorcentajeNumero(arrayMillar,indice)*7;
+                                tablaMillar+="<div class='barra' style='width:"+anchura+"px;'; >"
+                                                    +`${millar}`+"<br/>"+obtenerPorcentajeNumero(arrayMillar,indice).replace('.',',')+"%</div>";
+                                console.log("millar en % ",obtenerPorcentajeNumero(arrayMillar,indice).replace('.',','));
+                                tablaMillar+="</td>";
+                                tablaMillar+="</tr>";
+                            });
+          
+           let tablaDecMillar="<tr><th colspan=2>Decena Millar Primer Premio</th></tr>";
+           tablaDecMillar+="<tr><th>Numero</th><th>NºVeces/Porcentaje</th></tr>";
+           
+           arrayDecMillar.forEach((decmillar,indice)=>{
+                                tablaDecMillar+="<tr>";
+                                tablaDecMillar+="<td>"+indice+"</td>";
+                                tablaDecMillar+="<td>";                             
+                                anchura=obtenerPorcentajeNumero(arrayDecMillar,indice)*7;
+                                tablaDecMillar+="<div class='barra' style='width:"+anchura+"px;'; >"
+                                                    +`${decmillar}`+"<br/>"+obtenerPorcentajeNumero(arrayDecMillar,indice).replace('.',',')+"%</div>";
+                                console.log("decmillar en % ",obtenerPorcentajeNumero(arrayDecMillar,indice).replace('.',','));
+                                tablaDecMillar+="</td>";
+                                tablaDecMillar+="</tr>";
+                            });
+
+
+           document.getElementById("termigordo").innerHTML=tablaTerminaciones;
+           document.getElementById("decenagordo").innerHTML=tablaDecena;
+           document.getElementById("centenagordo").innerHTML=tablaCentena;
+           document.getElementById("millargordo").innerHTML=tablaMillar;
+           document.getElementById("decmillargordo").innerHTML=tablaDecMillar;
+           //document.getElementById("gordos").innerHTML=tablaPrimeros;
+           document.getElementById("datos").innerHTML=tabla;
+           document.getElementById("media").innerHTML=tablaMedia;
+           
+           document.getElementById("cargarDatos").addEventListener("click",function() { calcular(); },false);
+        /*Final de Fetch*/
+        })
+}
+
+function calcularMedia(arrayNumeros){
+    return (arrayNumeros[0]+arrayNumeros[1]+arrayNumeros[2]+arrayNumeros[3]+arrayNumeros[4]+arrayNumeros[5]+arrayNumeros[6]+arrayNumeros[7]+
+            arrayNumeros[8]+arrayNumeros[9])/10;
+} 
+/*function calcularMedia2(num1,num2,num3,num4,num5,num6,num7,num8,num9,num10){
+    return (num1+num2+num3+num4+num5+num6+num7+num8+num9+num10)/10;
+}*/ 
+
+function calcularNumeroSinSalir(arrayDeNumeros){
+    //console.log("Entra en media sin salir",arrayDeNumeros.length);
+    let arrayNumeroSinSalir=[];            
+    arrayDeNumeros.forEach((numero,indice)=>{
+            if(Math.trunc(numero)==0){
+                arrayNumeroSinSalir.push(indice);
+            }
+    });
+    //console.log("Numeros sin salir",arrayNumeroSinSalir.length);
+    return arrayNumeroSinSalir;           
+}
+
+function calcularNumeros(arrayDeNumeros,media){
+    let parteEntera=Math.trunc(media);
+    let arrayResult=[];
+
+    arrayDeNumeros.forEach((numero,indice)=>{
+        if(numero===parteEntera){
+            arrayResult.push(indice);
+        }
+    });
+    //Intentamos por el superior si pasa de 0.5
+    if(arrayResult.length==0){
+        parteEntera=Math.round(media);
+        arrayDeNumeros.forEach((numero,indice)=>{
+            if(numero===parteEntera){
+                arrayResult.push(indice);
+            }
+        });
+    }
+
+    //Si sigue siendo 0
+    if(arrayResult.length==0){
+        parteEntera=Math.floor(media);
+        arrayDeNumeros.forEach((numero,indice)=>{
+            if(numero===parteEntera){
+                arrayResult.push(indice);
+            }
+        });
+    }
+
+    //Si sigue siendo 0 obtenemos los más cercanos
+    if(arrayResult.length==0){
+        parteEntera=Math.trunc(media);
+        arrayDeNumeros.forEach((numero,indice)=>{
+            if(numero===(parteEntera+1)||numero===(parteEntera-1)){
+                arrayResult.push(indice);
+            }
+        })
+    }
+
+    return arrayResult;
+
+}
+
+function obtenerPorcentajeNumero(array,posicion){
+    return (array[posicion]/(array[0]+array[1]+array[2]+array[3]+array[4]+array[5]+array[6]+array[7]+array[8]+array[9])*100).toFixed(2);
+}
+
+function incrementarNumero(arrayNum,numero){
+    
+        switch(numero){
+                        case "0":
+                            arrayNum[0]++;                                
+                            break;
+                        case "1":
+                            arrayNum[1]++; 
+                            break;
+                        case "2":
+                            arrayNum[2]++; 
+                            break;
+                        case "3":
+                            arrayNum[3]++; 
+                            break;
+                        case "4":
+                            arrayNum[4]++; 
+                            break;
+                        case "5":
+                            arrayNum[5]++; 
+                            break;
+                        case "6":
+                            arrayNum[6]++; 
+                            break;
+                        case "7":
+                            arrayNum[7]++; 
+                            break;
+                        case "8":
+                            arrayNum[8]++; 
+                            break;
+                        case "9":
+                            arrayNum[9]++; 
+                            break;
+                    }
+
+  
+}
+    
+    function calcular(){
+            //console.log("Entra en calcular dataValues.length=",dataValues.length);
+            let numlot=document.getElementById("numlot");
+            let numero = numlot.value;                     
+            console.log("valor="+numero);
+            const filas = document.getElementById("datos").getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            console.log("Total Filas",filas.length);
+            
+            let encontrado=false;
+            let celdas;
+            let filasEncontradas="";
+            let categoria="";
+
+            for(let i=0;i<filas.length;i++){
+                celdas = filas[i].getElementsByTagName('td');
+                console.log("Total Celdas",celdas.length);
+                /*if(celdas[2].textContent==numero){
+                    console.log("celdas[2].textContent",celdas[2].textContent);
+                }*/
+                
+                for(let j=0;j<celdas.length;j++){                
+                    
+                    if(celdas[j].textContent.toString().padStart(5,0)==numero.toString().padStart(5,0)){
+                        encontrado=true;
+                        if(j==1){categoria="Primer"}
+                        if(j==2){categoria="Segundo"}
+                        if(j==3){categoria="Tercero"}
+                        filasEncontradas+="<tr><td>El numero "+numero.toString().padStart(5,0)+" fue "+categoria+" premio en el año "+celdas[0].textContent+"</td></tr>";                       
+                        j=celdas.length;
+                    }
+                }
+            }
+            console.log(filasEncontradas);
+            if(filasEncontradas==""){
+                filasEncontradas+="<tr><td>El numero "+numero+" no ha obtenido ningun premio</td></tr>";
+            }
+
+            document.getElementById("filasEncontradas").innerHTML=filasEncontradas;
+
+        }
+</script>
+</html>
